@@ -1,0 +1,59 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="init0" author="leucist">
+        <createTable tableName="Users">
+            <column name="Id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="Username" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="Password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="Categories">
+            <column name="Id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="UserId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="Tasks">
+            <column name="Id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="Title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Description" type="TEXT"/>
+            <column name="Status" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CategoryId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="Categories"
+                                 baseColumnNames="UserId"
+                                 referencedTableName="Users"
+                                 referencedColumnNames="Id"
+                                 constraintName="fk_categories_users"/>
+
+        <addForeignKeyConstraint baseTableName="Tasks"
+                                 baseColumnNames="CategoryId"
+                                 referencedTableName="Categories"
+                                 referencedColumnNames="Id"
+                                 constraintName="fk_tasks_categories"/>
+    </changeSet>
+</databaseChangeLog>
