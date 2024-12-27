@@ -70,6 +70,13 @@
             </column>
         </createTable>
 
+        <!-- Configure autoincrements -->
+        <addAutoIncrement tableName="users" columnName="id" columnDataType="BIGINT"/>
+        <addAutoIncrement tableName="roles" columnName="id" columnDataType="BIGINT"/>
+        <addAutoIncrement tableName="users_roles" columnName="id" columnDataType="BIGINT"/>
+        <addAutoIncrement tableName="categories" columnName="id" columnDataType="BIGINT"/>
+        <addAutoIncrement tableName="tasks" columnName="id" columnDataType="BIGINT"/>
+
 
         <!-- users_roles FK linking -->
         <addForeignKeyConstraint baseTableName="users_roles"

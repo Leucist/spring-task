@@ -6,17 +6,14 @@
     <changeSet id="init1" author="leucist">
         <!-- Create basic roles -->
         <insert tableName="roles">
-            <column name="id" valueNumeric="1"/>
             <column name="name" value="ROLE_USER"/>
         </insert>
         <insert tableName="roles">
-            <column name="id" valueNumeric="2"/>
             <column name="name" value="ROLE_ADMIN"/>
         </insert>
 
         <!-- Add new user -->
         <insert tableName="users">
-            <column name="id" valueNumeric="1"/>
             <column name="username" value="admin"/>
             <!-- Set "admin_password" as password -->
             <column name="password" value="$2a$10$clowjM3hizahrDyNrbDFN.0OylxKhsI55u7H/egAN8EzMGW8gEN1a"/>
@@ -24,7 +21,6 @@
 
         <!-- Assign ROLE_ADMIN to the new user -->
         <insert tableName="users_roles">
-            <column name="id" valueNumeric="1"/>
             <column name="user_id" value="1"/>
             <column name="role_id" value="2"/>
         </insert>
