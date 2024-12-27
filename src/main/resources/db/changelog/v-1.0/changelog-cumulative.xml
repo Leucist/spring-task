@@ -5,4 +5,5 @@
 
     <!--    All the migrations in current version   -->
     <include file="2024-23-12--01-initial-schema-configuration.xml" relativeToChangelogFile="true"/>
+    <include file="2024-27-12--01-data-seeding.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

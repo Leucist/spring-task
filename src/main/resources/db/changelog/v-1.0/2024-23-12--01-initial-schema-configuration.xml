@@ -44,6 +44,15 @@
             </column>
         </createTable>
 
+        <createTable tableName="Roles">
+            <column name="Id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="Name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
         <addForeignKeyConstraint baseTableName="Categories"
                                  baseColumnNames="UserId"
                                  referencedTableName="Users"
