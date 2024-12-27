@@ -4,65 +4,97 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="init0" author="leucist">
-        <createTable tableName="Users">
-            <column name="Id" type="BIGINT">
+        <!-- USERS -->
+        <createTable tableName="users">
+            <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="Username" type="VARCHAR(255)">
+            <column name="username" type="VARCHAR(255)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="Password" type="VARCHAR(255)">
+            <column name="password" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
-        <createTable tableName="Categories">
-            <column name="Id" type="BIGINT">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="UserId" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="Name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="Tasks">
-            <column name="Id" type="BIGINT">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="Title" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="Description" type="TEXT"/>
-            <column name="Status" type="VARCHAR(25)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="CategoryId" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
+        <!-- ROLES -->
         <createTable tableName="Roles">
-            <column name="Id" type="BIGINT">
+            <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="Name" type="VARCHAR(255)">
+            <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="Categories"
-                                 baseColumnNames="UserId"
-                                 referencedTableName="Users"
-                                 referencedColumnNames="Id"
+        <!-- USERS_ROLES -->
+        <createTable tableName="users_roles">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- CATEGORIES -->
+        <createTable tableName="categories">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- TASKS -->
+        <createTable tableName="tasks">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="status" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+
+        <!-- users_roles FK linking -->
+        <addForeignKeyConstraint baseTableName="users_roles"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_ur_users"/>
+        <addForeignKeyConstraint baseTableName="users_roles"
+                                 baseColumnNames="role_id"
+                                 referencedTableName="roles"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_ur_roles"/>
+
+        <!-- categories FK linking -->
+        <addForeignKeyConstraint baseTableName="categories"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
                                  constraintName="fk_categories_users"/>
 
-        <addForeignKeyConstraint baseTableName="Tasks"
-                                 baseColumnNames="CategoryId"
-                                 referencedTableName="Categories"
-                                 referencedColumnNames="Id"
+        <!-- tasks FK linking -->
+        <addForeignKeyConstraint baseTableName="tasks"
+                                 baseColumnNames="category_id"
+                                 referencedTableName="categories"
+                                 referencedColumnNames="id"
                                  constraintName="fk_tasks_categories"/>
     </changeSet>
 </databaseChangeLog>

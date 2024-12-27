@@ -4,6 +4,7 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="init1" author="leucist">
+        <!-- Create basic roles -->
         <insert tableName="roles">
             <column name="id" valueNumeric="1"/>
             <column name="name" value="ROLE_USER"/>
@@ -13,10 +14,18 @@
             <column name="name" value="ROLE_ADMIN"/>
         </insert>
 
+        <!-- Add new user -->
         <insert tableName="users">
             <column name="id" valueNumeric="1"/>
             <column name="username" value="admin"/>
             <column name="password" value="admin_password"/>
+        </insert>
+
+        <!-- Assign ROLE_ADMIN to the new user -->
+        <insert tableName="users_roles">
+            <column name="id" valueNumeric="1"/>
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="2"/>
         </insert>
     </changeSet>
 </databaseChangeLog>
