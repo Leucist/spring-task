@@ -18,7 +18,8 @@
         <insert tableName="users">
             <column name="id" valueNumeric="1"/>
             <column name="username" value="admin"/>
-            <column name="password" value="admin_password"/>
+            <!-- Set "admin_password" as password -->
+            <column name="password" value="$2a$10$clowjM3hizahrDyNrbDFN.0OylxKhsI55u7H/egAN8EzMGW8gEN1a"/>
         </insert>
 
         <!-- Assign ROLE_ADMIN to the new user -->
