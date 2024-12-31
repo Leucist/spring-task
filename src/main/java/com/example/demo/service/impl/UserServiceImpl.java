@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.Roles;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
@@ -12,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         );
 
         // Configure Role and add to the User
-        String rolename = "ROLE_USER";
+        String rolename = Roles.ROLE_USER.toString();
         Role role = roleRepository.findByName(rolename);
         if (role == null) {
             role = checkRoleExist(rolename);
