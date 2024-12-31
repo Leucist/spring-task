@@ -73,6 +73,10 @@ public class AuthController {
     // handler method to display login page
     @GetMapping("/login")
     public String showLoginPage(Model model) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser != null) {
+            return "redirect:/profile";
+        }
         model.addAttribute("user", new UserDTO());
         return "login";
     }
