@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body>
+<div class="container">
+    <h1>User Profile: <span th:text="${user.username}"></span></h1>
+
+    <h2>Your Categories</h2>
+    <div>
+        <form th:action="@{/addCategory}" method="post">
+            <input type="text" name="name" placeholder="Category Name" required>
+            <button type="submit" class="btn btn-primary">Add Category</button>
+        </form>
+    </div>
+
+    <ul class="list-group mt-3">
+        <li th:each="category : ${categories}" class="list-group-item">
+            <h5 th:text="${category.name}"></h5>
+            <ul>
+                <li th:each="task : ${taskService.getTasksByCategory(category)}" th:text="${task.name}"></li>
+            </ul>
+            <button class="btn btn-danger" th:onclick="'confirmDeleteCategory(' + ${category.id} + ', \'' + ${category.name} + '\')'">Delete Category</button>
+        </li>
+    </ul>
+
+    <a href="/logout" class="btn btn-secondary mt-3">Log Out</a>
+</div>
+
+<script>
+    function confirmDeleteCategory(categoryId, categoryName) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Deleting the category '" + categoryName + "' will remove all tasks in it!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Here you can make a request to delete the category
+                window.location.href = '/removeCategory/' + categoryId; // Replace with your URL for deleting the category
+            }
+        });
+    }
+</script>
+</body>
+</html>

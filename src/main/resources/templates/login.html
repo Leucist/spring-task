@@ -55,7 +55,11 @@
                                     name="username"
                                     class="form-control"
                                     placeholder="Enter username"
+                                    th:field="*{user.username}"
                             />
+                            <div th:if="${#fields.hasErrors('user.username')}" class="text-danger">
+                                <span th:errors="*{username}">User with the given username does not exist</span>
+                            </div>
                         </div>
 
                         <div class="form-group mb-3">
@@ -66,7 +70,11 @@
                                     name="password"
                                     class="form-control"
                                     placeholder="Enter password"
+                                    th:field="*{user.password}"
                             />
+                            <div th:if="${#fields.hasErrors('user.password')}" class="text-danger">
+                                <span th:errors="*{password}">Password is incorrect</span>
+                            </div>
                         </div>
                         <div class="form-group mb-3">
                             <button type="submit" class="btn btn-primary" >Submit</button>

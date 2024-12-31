@@ -41,13 +41,22 @@ public class AuthController {
     @PostMapping("/register/save")
     public String registration(@Valid @ModelAttribute("user") UserDTO userDTO,
                                BindingResult result,
-                               Model model){
+                               Model model)
+    {
+        // Double-check for the empty data
+        if (userDTO.hasNulls()) {
+            if (userDTO.hasEmptyUsername())
+                result.rejectValue("username", null, "Username must not be empty");
+            if (userDTO.hasEmptyPassword())
+                result.rejectValue("password", null, "Password must not be empty");
+        }
+
+        // Trim user input login and password
+        userDTO.trimSpacesInCredentials();
+
         User existingUser = userService.findUserByUsername(userDTO.getUsername());
 
-        if (existingUser != null
-            && existingUser.getUsername() != null
-            && !existingUser.getUsername().isEmpty()
-        ){
+        if (existingUser != null) {
             result.rejectValue("username", null,
                     "There is already an account registered with the same username");
         }
@@ -58,20 +67,35 @@ public class AuthController {
         }
 
         userService.saveUser(userDTO);
-        return "redirect:/register?success";
+        return "redirect:/login";
     }
 
-    // handler method to handle list of users
-    @GetMapping("/users")
-    public String users(Model model){
-        List<UserDTO> users = userService.findAllUsers();
-        model.addAttribute("users", users);
-        return "users";
+    // handler method to display login page
+    @GetMapping("/login")
+    public String showLoginPage(Model model) {
+        model.addAttribute("user", new UserDTO());
+        return "login";
     }
 
     // handler method to handle login request
-    @GetMapping("/login")
-    public String login(){
-        return "login";
+    @PostMapping("/login")
+    public String loginOnPost(@Valid @ModelAttribute("user") UserDTO userDTO,
+                              BindingResult result,
+                              Model model) {
+        userDTO.trimSpacesInCredentials();
+        User existingUser = userService.findUserByUsername(userDTO.getUsername());
+
+        if (existingUser == null) {
+            result.rejectValue("username", null, "User with the given username does not exist");
+        } else if (!userService.checkUserCredentials(existingUser, userDTO.getPassword())) {
+            result.rejectValue("password", null, "Password is incorrect");
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("user", userDTO);
+            return "login";
+        }
+
+        return "redirect:/profile";
     }
 }

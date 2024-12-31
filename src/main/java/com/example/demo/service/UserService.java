@@ -11,4 +11,8 @@ public interface UserService {
     User findUserByUsername(String username);
 
     List<UserDTO> findAllUsers();
+
+    User getCurrentUser();
+
+    boolean checkUserCredentials(User user, String rawPassword);
 }

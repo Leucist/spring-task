@@ -26,6 +26,9 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Category> categories;
+
     public User() {}
     public User(String username, String password) {
         this.username = username;
@@ -37,9 +40,11 @@ public class User {
     public String getUsername() { return username; }
     public String getPassword() { return password; }
     public List<Role> getRoles() { return roles; }
+    public List<Category> getCategories() { return categories; }
 
     // - Setters
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
     public void setRoles(List<Role> roles) { this.roles = roles; }
+    public void setCategories(List<Category> categories) { this.categories = categories; }
 }
