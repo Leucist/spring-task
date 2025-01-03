@@ -26,14 +26,23 @@
     <ul class="list-group mt-3">
         <li th:each="category : ${categories}" class="list-group-item">
             <h5 th:text="${category.name}"></h5>
-            <ul class="list-group">
-                <li th:each="task : ${category.getTasks()}" class="list-group-item d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 th:text="${task.title}"></h6>
-                        <p th:text="${task.description}"></p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${category.getTasks()}">
+                    <td th:text="${task.title}"></td>
+                    <td th:text="${task.description}"></td>
+                    <td>
                         <span class="badge badge-secondary" th:text="${task.status}"></span>
-                    </div>
-                    <div>
+                    </td>
+                    <td>
                         <form th:action="@{/profile/editTaskStatus}" method="post" class="d-inline">
                             <input type="hidden" name="taskId" th:value="${task.id}"/>
                             <select name="status" class="form-control d-inline" required>
@@ -50,9 +59,10 @@
                                 onclick="confirmDeleteTask(this.dataset.taskId, this.dataset.taskTitle)">
                             <i class="fas fa-trash"></i>
                         </button>
-                    </div>
-                </li>
-            </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
             <form th:action="@{/profile/addTask}" method="post" class="mb-2">
                 <input type="hidden" name="categoryId" th:value="${category.id}"/>
                 <div class="input-group">
