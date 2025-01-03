@@ -55,8 +55,7 @@ public class ProfileController {
                 categoryService.addCategory(currentUser, name);
             }
         }
-
-        showProfile(model);
+        
         return "redirect:/profile";
     }
 
@@ -88,7 +87,7 @@ public class ProfileController {
             }
         }
 
-        return "redirect:/" + showProfile(model);
+        return "redirect:/profile";
     }
 
     @PostMapping("/profile/editTaskStatus")
