@@ -37,8 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void removeCategory(Category category) {
-        categoryRepository.delete(category);
+    public void removeCategory(Long categoryId) {
+        // Remove the category if it's found
+        categoryRepository.findById(categoryId).ifPresent(categoryRepository::delete);
     }
 
     @Override

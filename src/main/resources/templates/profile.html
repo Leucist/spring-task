@@ -26,14 +26,38 @@
     <ul class="list-group mt-3">
         <li th:each="category : ${categories}" class="list-group-item">
             <h5 th:text="${category.name}"></h5>
-            <ul>
-                <li th:each="task : ${category.getTasks()}" th:text="${task.title}"></li>
+            <ul class="list-group">
+                <li th:each="task : ${category.getTasks()}" class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 th:text="${task.title}"></h6>
+                        <p th:text="${task.description}"></p>
+                        <span class="badge badge-secondary" th:text="${task.status}"></span>
+                    </div>
+                    <div>
+                        <form th:action="@{/profile/editTaskStatus}" method="post" class="d-inline">
+                            <input type="hidden" name="taskId" th:value="${task.id}"/>
+                            <select name="status" class="form-control d-inline" required>
+                                <option value="" disabled>Select Status</option>
+                                <option value="Pending" th:selected="${task.status == 'Pending'}">Pending</option>
+                                <option value="In Progress" th:selected="${task.status == 'In Progress'}">In Progress</option>
+                                <option value="Completed" th:selected="${task.status == 'Completed'}">Completed</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                        <button class="btn btn-danger btn-sm"
+                                th:data-task-id="${task.id}"
+                                th:data-task-title="${task.title}"
+                                onclick="confirmDeleteTask(this.dataset.taskId, this.dataset.taskTitle)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </li>
             </ul>
             <form th:action="@{/profile/addTask}" method="post" class="mb-2">
                 <input type="hidden" name="categoryId" th:value="${category.id}"/>
                 <div class="input-group">
                     <input type="text" name="title" class="form-control" placeholder="Task Title" required>
-                    <input type="text" name="description" class="form-control" placeholder="Task Description" required>
+                    <input type="text" name="description" class="form-control" placeholder="Task Description">
                     <select name="status" class="form-control" required>
                         <option value="" disabled selected>Select Status</option>
                         <option value="Pending">Pending</option>
@@ -46,6 +70,8 @@
                 </div>
             </form>
             <button class="btn btn-danger"
+                    th:data-category-id="${category.id}"
+                    th:data-category-name="${category.name}"
                     th:onclick="confirmDeleteCategory(this.dataset.categoryId, this.dataset.categoryName)"
             >Delete Category</button>
         </li>
@@ -67,7 +93,12 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/removeCategory/' + categoryId; // URL для удаления категории
+                // - Create the form to send POST request
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/profile/removeCategory/' + categoryId;
+                document.body.appendChild(form);
+                form.submit();                                              // Send the form
             }
         });
     }
@@ -84,7 +115,29 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/logout'; // URL для выхода
+                window.location.href = '/logout';                           // URL for the logout
+            }
+        });
+    }
+
+    function confirmDeleteTask(taskId, taskTitle) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Deleting the task '" + taskTitle + "' will remove it permanently!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // - Create the form to send POST request
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/profile/removeTask/' + taskId;
+                document.body.appendChild(form);
+                form.submit();                                              // Send the form
             }
         });
     }

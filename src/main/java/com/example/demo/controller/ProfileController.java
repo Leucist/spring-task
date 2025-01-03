@@ -10,6 +10,7 @@ import com.example.demo.service.CategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,5 +73,38 @@ public class ProfileController {
         }
 
         return "redirect:/" + showProfile(model);
+    }
+
+    @PostMapping("/profile/editTaskStatus")
+    public String editTaskStatus(@RequestParam("taskId") Long taskId,
+                                 @RequestParam("status") String status) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser != null) {
+            Optional<UserTask> taskOptional = taskService.getTaskById(taskId);
+            if (taskOptional.isPresent()) {
+                UserTask task = taskOptional.get();
+                task.setStatus(status);
+                taskService.updateTask(task);
+            }
+        }
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/removeTask/{taskId}")
+    public String removeTask(@PathVariable Long taskId) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser != null) {
+            taskService.removeTask(taskId);
+        }
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/removeCategory/{categoryId}")
+    public String removeCategory(@PathVariable Long categoryId) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser != null) {
+            categoryService.removeCategory(categoryId);
+        }
+        return "redirect:/profile";
     }
 }
