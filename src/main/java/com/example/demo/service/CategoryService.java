@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface CategoryService {
     List<Category> getCategoriesByUser (User user);
-    List<UserTask> getTasksByCategory (Category category);
     Optional<Category> getCategoryById(Long id);
 
     void addCategory(User user, String name);

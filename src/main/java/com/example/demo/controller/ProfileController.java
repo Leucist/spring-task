@@ -115,10 +115,16 @@ public class ProfileController {
         return "redirect:/profile";
     }
 
-    @PostMapping("/removeCategory/{categoryId}")
+    @PostMapping("/profile/removeCategory/{categoryId}")
     public String removeCategory(@PathVariable Long categoryId) {
+        System.out.println("Removing category with ID: " + categoryId);
         User currentUser = userService.getCurrentUser();
         if (currentUser != null) {
+            // Delete all the tasks in the current category
+            List<UserTask> tasks = taskService.getTasksByCategoryId(categoryId);
+            for (UserTask task : tasks) {
+                taskService.removeTask(task.getId());
+            }
             categoryService.removeCategory(categoryId);
         }
         return "redirect:/profile";

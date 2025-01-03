@@ -10,6 +10,8 @@ import com.example.demo.service.TaskService;
 import org.hibernate.sql.model.internal.OptionalTableUpdate;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,5 +46,12 @@ public class TaskServiceImpl implements TaskService {
     public void removeTask (Long taskId) {
         // Remove the task if it's found
         taskRepository.findById(taskId).ifPresent(taskRepository::delete);
+    }
+
+    @Override
+    public List<UserTask> getTasksByCategoryId(Long categoryId) {
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        // map() is used to handle Optional -> returns all the tasks or empty list
+        return category.map(Category::getTasks).orElseGet(Collections::emptyList);
     }
 }

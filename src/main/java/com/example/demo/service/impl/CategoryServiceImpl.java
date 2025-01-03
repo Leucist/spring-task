@@ -24,11 +24,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<UserTask> getTasksByCategory (Category category) {
-        return category.getTasks();
-    }
-
-    @Override
     public void addCategory(User user, String name) {
         Category category = new Category();
         category.setUser(user);
