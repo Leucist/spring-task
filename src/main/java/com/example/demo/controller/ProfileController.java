@@ -116,7 +116,6 @@ public class ProfileController {
 
     @PostMapping("/profile/removeCategory/{categoryId}")
     public String removeCategory(@PathVariable Long categoryId) {
-        System.out.println("Removing category with ID: " + categoryId);
         User currentUser = userService.getCurrentUser();
         if (currentUser != null) {
             // Delete all the tasks in the current category
