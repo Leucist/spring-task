@@ -8,6 +8,7 @@ import com.example.demo.service.CategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -38,5 +39,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void removeCategory(Category category) {
         categoryRepository.delete(category);
+    }
+
+    @Override
+    public Optional<Category> getCategoryById(Long id) {
+        return categoryRepository.findById(id);
     }
 }

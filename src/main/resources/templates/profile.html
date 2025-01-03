@@ -8,14 +8,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
-<div class="container">
+<div class="container mt-5">
     <h1>User Profile: <span th:text="${user.username}"></span></h1>
 
-    <h2>Your Categories</h2>
-    <div>
-        <form th:action="@{/addCategory}" method="post">
-            <input type="text" name="name" placeholder="Category Name" required>
-            <button type="submit" class="btn btn-primary">Add Category</button>
+    <h2 class="mt-4">Your Categories</h2>
+    <div class="mb-3">
+        <form th:action="@{/profile/addCategory}" method="post" id="addCategoryForm">
+            <div class="input-group">
+                <input type="text" name="name" class="form-control" placeholder="Category Name" required>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </div>
+            </div>
         </form>
     </div>
 
@@ -23,13 +27,31 @@
         <li th:each="category : ${categories}" class="list-group-item">
             <h5 th:text="${category.name}"></h5>
             <ul>
-                <li th:each="task : ${taskService.getTasksByCategory(category)}" th:text="${task.name}"></li>
+                <li th:each="task : ${category.getTasks()}" th:text="${task.title}"></li>
             </ul>
-            <button class="btn btn-danger" th:onclick="'confirmDeleteCategory(' + ${category.id} + ', \'' + ${category.name} + '\')'">Delete Category</button>
+            <form th:action="@{/profile/addTask}" method="post" class="mb-2">
+                <input type="hidden" name="categoryId" th:value="${category.id}"/>
+                <div class="input-group">
+                    <input type="text" name="title" class="form-control" placeholder="Task Title" required>
+                    <input type="text" name="description" class="form-control" placeholder="Task Description" required>
+                    <select name="status" class="form-control" required>
+                        <option value="" disabled selected>Select Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-success">Add Task</button>
+                    </div>
+                </div>
+            </form>
+            <button class="btn btn-danger"
+                    th:onclick="confirmDeleteCategory(this.dataset.categoryId, this.dataset.categoryName)"
+            >Delete Category</button>
         </li>
     </ul>
 
-    <a href="/logout" class="btn btn-secondary mt-3">Log Out</a>
+    <a href="#" class="btn btn-secondary mt-3" onclick="confirmLogout()">Log Out</a>
 </div>
 
 <script>
@@ -45,8 +67,24 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Here you can make a request to delete the category
-                window.location.href = '/removeCategory/' + categoryId; // Replace with your URL for deleting the category
+                window.location.href = '/removeCategory/' + categoryId; // URL для удаления категории
+            }
+        });
+    }
+
+    function confirmLogout() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you really want to log out?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, log out!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/logout'; // URL для выхода
             }
         });
     }

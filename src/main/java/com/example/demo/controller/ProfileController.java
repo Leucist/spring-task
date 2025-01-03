@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Category;
 import com.example.demo.model.User;
+import com.example.demo.model.UserTask;
 import com.example.demo.service.UserService;
 import com.example.demo.service.TaskService;
 import com.example.demo.service.CategoryService;
@@ -8,6 +10,12 @@ import com.example.demo.service.CategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ProfileController {
@@ -30,5 +38,39 @@ public class ProfileController {
             model.addAttribute("categories", categoryService.getCategoriesByUser(currentUser));
         }
         return "profile";
+    }
+
+    @PostMapping("/profile/addCategory")
+    public String addCategory(@RequestParam("name") String name,
+                              Model model) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser != null) {
+            categoryService.addCategory(currentUser, name);
+        }
+
+        showProfile(model);
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/addTask")
+    public String addTask(@RequestParam("categoryId") Long categoryId,
+                          @RequestParam("title") String title,
+                          @RequestParam("description") String description,
+                          @RequestParam("status") String status,
+                          Model model) {
+        // Check the current user
+        User currentUser = userService.getCurrentUser();
+        Optional<Category> currentCategory = categoryService.getCategoryById(categoryId);
+        if (currentUser != null && currentCategory.isPresent()) {
+            UserTask userTask = new UserTask();
+            userTask.setTitle(title);
+            userTask.setDescription(description);
+            userTask.setStatus(status);
+            userTask.setCategory(currentCategory.get());
+
+            taskService.addTaskToCategory(categoryId, userTask, currentUser);
+        }
+
+        return "redirect:/" + showProfile(model);
     }
 }

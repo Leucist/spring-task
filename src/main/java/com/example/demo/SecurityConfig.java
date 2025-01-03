@@ -28,14 +28,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/register/**").permitAll()
+                        authorize.requestMatchers("/").permitAll()  // aka home page
+                                .requestMatchers("/register/**").permitAll()
+                                .requestMatchers("/login").permitAll()
                                 .requestMatchers("/index").permitAll()
-                                .requestMatchers("/profile").hasRole("USER")
+                                .requestMatchers("/profile/**").hasRole("USER")
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/profile")
+                                .defaultSuccessUrl("/profile", true)
                                 .permitAll()
                 ).logout(
                         logout -> logout

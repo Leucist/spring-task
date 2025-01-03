@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.Roles;
 import com.example.demo.dto.UserDTO;
+import com.example.demo.model.Category;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.RoleRepository;
@@ -88,5 +89,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkUserCredentials(User user, String rawPassword) {
         return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
+    @Override
+    public boolean userHasCategory(User user, Category category) {
+        return user.getCategories().contains(category);
     }
 }
