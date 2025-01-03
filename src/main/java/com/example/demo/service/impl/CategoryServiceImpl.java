@@ -25,10 +25,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void addCategory(User user, String name) {
-        Category category = new Category();
-        category.setUser(user);
-        category.setName(name);
-        categoryRepository.save(category);
+        if (categoryRepository.findByName(name) == null) {
+            Category category = new Category();
+            category.setUser(user);
+            category.setName(name);
+            categoryRepository.save(category);
+        }
     }
 
     @Override

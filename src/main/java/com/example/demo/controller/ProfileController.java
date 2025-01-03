@@ -55,7 +55,7 @@ public class ProfileController {
                 categoryService.addCategory(currentUser, name);
             }
         }
-        
+
         return "redirect:/profile";
     }
 
