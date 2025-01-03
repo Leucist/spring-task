@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tasks")
@@ -10,12 +11,14 @@ public class UserTask {
     private Long id;
 
     @Column(nullable = false)
+    @Size(max = 255, message = "Title cannot exceed 255 characters.")
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(length = 25, nullable = false)
+    @Size(max = 25, message = "Status cannot exceed 25 characters.")
     private String status;
 
     @ManyToOne

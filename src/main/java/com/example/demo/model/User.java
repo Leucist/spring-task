@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +14,11 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @Size(max = 255, message = "Username cannot exceed 255 characters.")
     private String username;
 
     @Column(nullable = false)
+    @Size(max = 255, message = "Password cannot exceed 255 characters.")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

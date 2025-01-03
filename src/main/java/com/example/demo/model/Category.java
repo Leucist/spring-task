@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class Category {
     private User user;
 
     @Column(nullable = false)
+    @Size(max = 255, message = "Name cannot exceed 255 characters.")
     private String name;
 
     @OneToMany(mappedBy = "category")

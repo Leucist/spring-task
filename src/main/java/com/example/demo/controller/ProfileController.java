@@ -9,6 +9,7 @@ import com.example.demo.service.CategoryService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,7 +47,13 @@ public class ProfileController {
                               Model model) {
         User currentUser = userService.getCurrentUser();
         if (currentUser != null) {
-            categoryService.addCategory(currentUser, name);
+            if (name.length() > 255) {
+                model.addAttribute("error", "Category name cannot exceed 255 characters.");
+            }
+
+            if (!model.containsAttribute("error")) {
+                categoryService.addCategory(currentUser, name);
+            }
         }
 
         showProfile(model);
@@ -63,13 +70,22 @@ public class ProfileController {
         User currentUser = userService.getCurrentUser();
         Optional<Category> currentCategory = categoryService.getCategoryById(categoryId);
         if (currentUser != null && currentCategory.isPresent()) {
-            UserTask userTask = new UserTask();
-            userTask.setTitle(title);
-            userTask.setDescription(description);
-            userTask.setStatus(status);
-            userTask.setCategory(currentCategory.get());
+            if (title.length() > 255) {
+                model.addAttribute("error", "Title cannot exceed 255 characters.");
+            }
+            if (status.length() > 25) {
+                model.addAttribute("error", "Status cannot exceed 25 characters.");
+            }
 
-            taskService.addTaskToCategory(categoryId, userTask, currentUser);
+            if (!model.containsAttribute("error")) {
+                UserTask userTask = new UserTask();
+                userTask.setTitle(title);
+                userTask.setDescription(description);
+                userTask.setStatus(status);
+                userTask.setCategory(currentCategory.get());
+
+                taskService.addTaskToCategory(categoryId, userTask, currentUser);
+            }
         }
 
         return "redirect:/" + showProfile(model);
